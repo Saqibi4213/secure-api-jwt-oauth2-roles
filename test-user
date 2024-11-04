@@ -1,0 +1,117 @@
+
+3. Test the Authentication Routes
+a. Register a New User
+Create a new POST request in Postman with the URL:
+
+bash
+Copy code
+http://localhost:5000/api/auth/signup
+Set the request body to raw and select JSON as the format.
+
+Add the following JSON to the body to register a new user:
+
+json
+Copy code
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+Send the request. If everything is set up correctly, you should receive a response like:
+
+json
+Copy code
+{
+  "message": "User registered successfully!"
+}
+b. Login the User and Get a Token
+Create a new POST request in Postman with the URL:
+
+bash
+Copy code
+http://localhost:5000/api/auth/login
+Set the request body to raw and select JSON.
+
+Add the following JSON to the body to log in:
+
+json
+Copy code
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+Send the request. You should receive a response containing a JWT token:
+
+json
+Copy code
+{
+  "token": "your_jwt_token_here"
+  {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjhjYmY3OGFhMzdkYzdhNGQwODdmNCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzMwNzI3NTU4LCJleHAiOjE3MzA3MzExNTh9.PoRKe3GoePXBAozxBGwAUZszKYrCk2fR3d-cnzwzUZ4"}
+}
+Copy the token from the response, as you’ll use it to test protected routes.
+
+4. Test Protected Routes (Book Routes)
+a. Get All Books (Public Route)
+Create a new GET request with the URL:
+
+bash
+Copy code
+http://localhost:5000/api/books
+Send the request. You should receive an empty array or a list of books if any are already in the database:
+
+json
+Copy code
+[]
+b. Add a New Book (Admin Route)
+Create a new POST request with the URL:
+
+bash
+Copy code
+http://localhost:5000/api/books
+Go to the Authorization tab, select Bearer Token, and paste the JWT token you copied earlier.
+
+Set the request body to raw and select JSON.
+
+Add the following JSON to the body to create a new book (make sure the user is an admin):
+[{"_id":"670fda7a3640560d832c6a5d","title":"The Great Gatsby","author":"F. Scott Fitzgerald","publishedYear":1925,"genre":"Fiction","rating":4.5,"__v":0,"createdAt":"2024-11-04T13:45:48.794Z"}]
+json
+Copy code
+{
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "description": "A novel set in the Jazz Age"
+}
+Send the request. If the user has the admin role, you should receive a response with the created book:
+
+json
+Copy code
+{
+  "_id": "book_id_here",
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "description": "A novel set in the Jazz Age"
+}
+If you get a "403 Forbidden" message, it means your token does not have the required admin role.
+
+5. Additional Tests
+Invalid Token: Try accessing a protected route with an invalid token to check if you get a 401 Unauthorized response.
+Role-based Access: Test with different user roles to verify that permissions work as expected.
+Following these steps will allow you to test each part of your API using Postman, helping ensure all features and security checks work as intended. If you encounter specific issues or errors, feel free to share them for further troubleshooting!
+
+////
+
+bookstore-api/
+├── models/
+│   ├── User.js
+│   └── Book.js
+├── routes/
+│   ├── auth.js
+│   └── books.js
+├── config/
+│   └── passport.js
+├── middleware/
+│   ├── auth.js
+│   └── authorizeRoles.js
+├── app.js
+├── .env
+└── README.md
