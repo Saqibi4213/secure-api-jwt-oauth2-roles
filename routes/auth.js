@@ -19,9 +19,9 @@ router.post('/signup', async (req, res) => {
     // Create a new user
     const user = new User({ username, email, password });
     await user.save();
-    return res.status(201).json({ message: 'User registered successfully!' });
+    res.status(201).json({ message: 'User registered successfully!' });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -29,26 +29,25 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  
   if (!user || !(await user.comparePassword(password))) {
     return res.status(400).json({ message: 'Invalid credentials' });
   }
-
   const token = jwt.sign(
-    { id: user._id, role: user.role }, // Ensure you're comfortable with _id naming
+    { id: user._id, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
-  return res.json({ token });
+  res.json({ token });
 });
 
 // Google Auth Route
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // Google Auth Callback Route
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
+router.get("/google/callback", passport.authenticate("google", { failureRedirect: "/" }), (req, res) => {
+  // Successful authentication, redirect home or send JWT.
   const token = jwt.sign({ id: req.user._id, role: req.user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  res.redirect(`http://localhost:3000/?token=${token}`);
+  res.redirect(`http://localhost:3000/?token=${token}`); // Redirect to your front-end with the token
 });
 
 module.exports = router;
