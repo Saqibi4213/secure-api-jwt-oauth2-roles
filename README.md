@@ -31,7 +31,7 @@ You can access the live API at: [Bookstore API](https://your-deployment-link-her
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Saqibi4213/bookstore-api.git
+   git clone https://github.com/Saqibi4213/secure-api-jwt-oauth2-roles.git
    cd bookstore-api
 
 
