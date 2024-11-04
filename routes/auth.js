@@ -32,13 +32,13 @@ router.post('/login', async (req, res) => {
   if (!user || !(await user.comparePassword(password))) {
     return res.status(400).json({ message: 'Invalid credentials' });
   }
-  
+
   const token = jwt.sign(
     { id: user.id, role: user.role }, // Use user.id instead of user._id
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: '1h' },
   );
-  
+
   return res.json({ token });
 });
 
