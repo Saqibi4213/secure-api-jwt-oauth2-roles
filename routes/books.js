@@ -1,14 +1,12 @@
 const express = require('express');
 const authenticateJWT = require('../middleware/auth');
 const authorizeRoles = require('../middleware/authorizeRoles');
-
 const Book = require('../models/Book');
 
 const router = express.Router();
 
 // Public route: Get all books
 router.get('/', async (req, res) => {
-
   const books = await Book.find();
   res.json(books);
 });
