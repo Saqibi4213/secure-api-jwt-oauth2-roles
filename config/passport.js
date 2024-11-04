@@ -1,6 +1,6 @@
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const User = require("../models/User");
+const passport = require('passport'); // Changed to single quotes
+const GoogleStrategy = require('passport-google-oauth20').Strategy; // Changed to single quotes
+const User = require('../models/User'); // Changed to single quotes
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -16,7 +16,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: '/api/auth/google/callback', // Changed to single quotes
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -24,16 +24,16 @@ passport.use(
         if (user) {
           return done(null, user);
         }
-        
+
         user = await new User({
           googleId: profile.id,
           username: profile.displayName,
           email: profile.emails[0].value,
-          role: "user"
+          role: 'user', // Changed to single quotes
         }).save();
-        done(null, user);
+        return done(null, user); // Added return statement to match the consistent-return rule
       } catch (err) {
-        done(err);
+        return done(err); // Added return statement to match the consistent-return rule
       }
     }
   )
