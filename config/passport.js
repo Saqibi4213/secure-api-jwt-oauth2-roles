@@ -35,6 +35,6 @@ passport.use(
       } catch (err) {
         return done(err); // Added return statement to match the consistent-return rule
       }
-    }
-  )
+    },
+  ),
 );
